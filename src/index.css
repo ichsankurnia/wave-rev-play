@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .flex-col-center {
+      @apply flex flex-col justify-center items-center
+  }
+  .flex-center {
+      @apply flex justify-center items-center
+  }
+  .label {
+    @apply font-medium text-chocolate mb-2 text-lg
+  }
+  .input-form {
+    @apply outline-none py-3 px-4 rounded-xl bg-white border-2 border-chocolate text-black
+  }
+  .btn-primary{
+    @apply bg-chocolate text-yellow-w rounded-xl font-bold text-xl py-3 w-full hover:opacity-80 duration-200 transition-all ease-in-out
+  }
+  .anim {
+    @apply duration-200 transition-all ease-in-out
+  }
+}
+
+:root{
+  background-color: #4F200D;
+}
+
+.button__bar {
+  @apply absolute bottom-2 sm:bottom-4 lg:bottom-6 w-full text-center space-x-2
+}
+
+.button__bar li {
+  list-style: none;
+  cursor: pointer;
+  display: inline-block;
+  padding: 0;
+}
+
+
+.button__bar li button {
+  @apply border-none bg-yellow-w text-transparent cursor-pointer block h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full
+}
+
+.button__bar li.slick-active button {
+  @apply bg-[#FFFF8E] w-8 sm:w-10 h-2 sm:h-2.5
+}
+
+.button__bar li button:hover{
+  background: white;
+  outline: 0;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #929292; 
+  border-radius: 50px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #FFD93D; 
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #FFFF8E;
+  cursor: pointer;
+}
