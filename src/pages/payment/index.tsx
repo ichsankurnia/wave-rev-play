@@ -1,17 +1,21 @@
 import { FC, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import QRCode from 'react-qr-code';
 import Header from '@/components/Header';
 import SideMenu from '@/components/SideMenu';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { useNavigate } from 'react-router-dom';
-import QRCode from 'react-qr-code';
 import ModalSuccessPayment from '@/components/ModalSuccessPayment';
 import PageLoading from '@/components/PageLoading';
+import { IDRFormatter } from '@/lib/helper';
 
 type Props = {};
 
 const PaymentPage: FC<Props> = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [isSuccessPayment, setIsSuccessPayment] = useState(false)
+
+    const boughtGame = JSON.parse(localStorage.getItem('bought_game') || '')
+    const totalPrice = localStorage.getItem('total_price')
 
     const navigate = useNavigate()
 
@@ -52,16 +56,21 @@ const PaymentPage: FC<Props> = () => {
                                 <div className='w-8/12 mx-auto flex flex-col divide-y divide-chocolate'>
                                     <div className='h-14 flex-col-center rounded-t-xl bg-yellow-w'>
                                         <p className='text-xs'>Total</p>
-                                        <p className='font-bold'>Rp 169.000</p>
+                                        <p className='font-bold'>{IDRFormatter(Number(totalPrice))}</p>
                                     </div>
                                     <div className='h-14 flex-col-center bg-[#D9D9D9]'>
                                         <p className='text-xs'>Buy at</p>
                                         <p className='font-bold'>Wave Revplay</p>
                                     </div>
-                                    <div className='h-14 flex-col-center bg-[#D9D9D9] rounded-b-xl'>
+                                    <div className='h-max min-h-14 flex-col-center bg-[#D9D9D9] rounded-b-xl'>
                                         <p className='text-xs'>Games</p>
-                                        <p className='font-bold text-xs'>Minecraft</p>
-                                        <p className='font-bold text-xs'>Five Nights at Freddy's</p>
+                                        {boughtGame && boughtGame.length > 0 ?
+                                            boughtGame.map((item: any) =>
+                                                <p className='font-bold text-xs' key={item.name}>{item.name}</p>
+                                            )
+                                            :
+                                            <p className=' font-light italic text-xs'>No games selected !</p>
+                                        }
                                     </div>
                                 </div>
 
@@ -86,7 +95,7 @@ const PaymentPage: FC<Props> = () => {
                                         </div>
                                         <hr className='border-chocolate border-[1.5px] rounded' />
                                         <div className='flex items-center justify-between'>
-                                            <span className='font-semibold'>Rp 169.000</span>
+                                            <span className='font-semibold'>{IDRFormatter(Number(totalPrice))}</span>
                                             <button className='text-white bg-chocolate px-6 py-2 font-semibold rounded-lg text-sm hover:opacity-70 anim' onClick={handleSuccessPayment}>Next</button>
                                         </div>
                                     </div>

@@ -1,15 +1,38 @@
+import { FC, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Header from '@/components/Header';
 import SideMenu from '@/components/SideMenu';
 import { CART_GANE, HISTORY_GANE } from '@/lib/data';
 import { IDRFormatter } from '@/lib/helper';
-import { FC } from 'react';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { Link, useNavigate } from 'react-router-dom';
 
 type Props = {};
 
 const CartPage: FC<Props> = () => {
+    const [selectedGames, setSelectedGames] = useState<typeof CART_GANE[0][]>([])
     const navigate = useNavigate()
+
+    const handleSelectGame = (game: typeof CART_GANE[0]) => {
+        if (selectedGames.find(item => item.name === game.name)) {
+            const newSelectedGame = [...selectedGames].filter(item => item.name !== game.name)
+            setSelectedGames(newSelectedGame)
+        } else {
+            setSelectedGames([...selectedGames, game])
+        }
+    }
+
+    const calculatePrice = () => {
+        return selectedGames.reduce((accumulator, currantValue) => accumulator + currantValue.price, 0)
+    }
+
+    const handleBuyGame = () => {
+        const boughtGame = JSON.stringify(selectedGames)
+
+        // SAVE TOTAL PRICE & BOUGHT GAME TO LOCAL STORAGE
+        localStorage.setItem('bought_game', boughtGame)
+        localStorage.setItem('total_price', calculatePrice().toString())
+        navigate('/payment')
+    }
 
     return (
         <>
@@ -40,7 +63,7 @@ const CartPage: FC<Props> = () => {
                                                     <span>{IDRFormatter(item.price)}</span>
                                                 </div>
                                             </div>
-                                            <input type='checkbox' className='accent-chocolate' />
+                                            <input type='checkbox' className='accent-chocolate' checked={selectedGames.find((game: any) => game.name === item.name) ? true : false} onChange={() => handleSelectGame(item)} />
                                         </label>
                                     )}
                                 </div>
@@ -72,8 +95,12 @@ const CartPage: FC<Props> = () => {
                                     </div>
 
                                     <div className='w-full bg-chocolate p-4 text-2xl flex items-center justify-between rounded-xl'>
-                                        <span className='text-white text-xl font-medium'>Total : <span className='text-yellow-w'>169.000</span></span>
-                                        <Link to='/payment' className=' bg-yellow-w text-chocolate px-6 py-2 font-semibold rounded-lg text-sm hover:opacity-70 anim'>Buy</Link>
+                                        <span className='text-white text-xl font-medium'>Total : <span className='text-yellow-w'>{IDRFormatter(calculatePrice())}</span></span>
+                                        <button className=' bg-yellow-w text-chocolate px-6 py-2 font-semibold rounded-lg text-sm hover:opacity-70 anim disabled:opacity-50 disabled:cursor-not-allowed'
+                                            disabled={calculatePrice() === 0} onClick={handleBuyGame}
+                                        >
+                                            Buy
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -96,9 +123,13 @@ const CartPage: FC<Props> = () => {
                         </div>
                     </div>
                     <div className='w-full max-w-[400px] bg-chocolate p-4 text-2xl flex items-center justify-between'>
-                        <span className='text-white text-xl font-medium'>Total : <span className='text-yellow-w'>169.000</span></span>
+                        <span className='text-white text-xl font-medium'>Total : <span className='text-yellow-w'>{IDRFormatter(calculatePrice())}</span></span>
                         <div className='bg-white h-10 w-[2px]'></div>
-                        <Link to='/payment' className=' bg-yellow-w text-chocolate px-6 py-2 font-semibold rounded-lg text-sm hover:opacity-70 anim'>Buy</Link>
+                        <button className=' bg-yellow-w text-chocolate px-6 py-2 font-semibold rounded-lg text-sm hover:opacity-70 anim disabled:opacity-50 disabled:cursor-not-allowed'
+                            disabled={calculatePrice() === 0} onClick={handleBuyGame}
+                        >
+                            Buy
+                        </button>
                     </div>
                 </footer>
             </div>
